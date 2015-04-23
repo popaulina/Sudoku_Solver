@@ -1,6 +1,7 @@
 #Retrieve puzzle to solve
 #Get nums row by row
 @board = []
+@check = []
 @list0 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 def getPuzzle
@@ -14,6 +15,7 @@ def getPuzzle
 			row = gets.rstrip().split('')
 		end
 		@board[i] = row
+		@check[i] = row.dup
 	#Assign possibilities:
 		for j in 0..8
 			if @board[i][j] == '0' 
@@ -27,24 +29,27 @@ end
 
 #Check valid puzzle (row, column, box)
 def valid
-	check = @board
+
 #Find duplicates in row	
+ 	checks = @check.dup
 	for i in 0..8
-		check[i].delete('0')
-		if check.uniq.length != check.length 
+		checks[i].delete('0')
+		if checks.uniq.length != checks.length 
 			return false
 		end
 	end
+
 #Find duplicates in column
+	checks = @check.dup
 	column = []
 	for i in 0..8
 		for j in 0..8
-			column.add(check[j][i])
+			column << checks[j][i]
 			column.delete('0')
 			if column.uniq.length != column.length 
 				return false
 			end
-			column.empty()
+			column.clear
 		end
 	end
 #Find duplicates in box (this is quite tedious)
@@ -54,13 +59,13 @@ def valid
 #Populate and check boxes for first three columns
 	for i in 0..2
 		for j in 0..2
-			box1.add(check[i][j])
+			box1 << checks[i][j]
 		end
 		for j in 3..5 
-			box2.add(check[i][j])
+			box2 << checks[i][j]
 		end
 		for j in 6..8
-			box3.add(check[i][j])
+			box3 << checks[i][j]
 		end
 	end
 	box1.delete('0')
@@ -76,15 +81,18 @@ def valid
 		return false
 	end
 #Second three columns
+	box1.clear
+	box2.clear
+	box3.clear
 	for i in 3..5
 		for j in 0..2
-			box1.add(check[i][j])
+			box1 << checks[i][j]
 		end
 		for j in 3..5 
-			box2.add(check[i][j])
+			box2 << checks[i][j]
 		end
 		for j in 6..8
-			box3.add(check[i][j])
+			box3 << checks[i][j]
 		end
 	end
 	box1.delete('0')
@@ -99,16 +107,19 @@ def valid
 	if box3.uniq.length != box3.length 
 		return false
 	end
-#And last three columns
+# And last three columns
+	box1.clear
+	box2.clear
+	box3.clear
 	for i in 6..8
 		for j in 0..2
-			box1.add(check[i][j])
+			box1 << checks[i][j]
 		end
 		for j in 3..5 
-			box2.add(check[i][j])
+			box2 << checks[i][j]
 		end
 		for j in 6..8
-			box3.add(check[i][j])
+			box3 << checks[i][j]
 		end
 	end
 	box1.delete('0')
@@ -123,7 +134,14 @@ def valid
 	if box3.uniq.length != box3.length 
 		return false
 	end
+
+	return true #woo
 #Less painful than I thought, code is almost completely reusable
+end
+
+#Simplify the board
+def simplify
+
 end
 
 #Find move in row
@@ -141,3 +159,4 @@ end
 #If a space has 0 possibilities change last guess
 
 getPuzzle
+puts valid
