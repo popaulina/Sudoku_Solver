@@ -8,7 +8,7 @@ def getPuzzle
 #Long way of doing the board, will add gui later.
 	smilies = [':)', ':D', ':o', 'B)', 'x)', 'xD', ':3']
 	for i in 0..8
-		p "Enter row #{i+1} of your puzzle #{smilies[rand(0..smilies.length)]} Enter a 0 for empty squares."
+		p "Enter row #{i+1} of your puzzle #{smilies[rand(0..smilies.length-1)]} Enter a 0 for empty squares."
 		row = gets.rstrip().split('')
 		while row.length != 9 
 			p "Whoops, you should be giving me nine numbers! Try again."
@@ -141,16 +141,36 @@ end
 
 #Simplify the board
 def simplify
-
-end
-
 #Find move in row
+taken = []
+	for i in 0..8
+		for j in 0..8
+			#Find what nums have been taken already
+			if @check[i][j].to_i > 0
+				taken << @check[i][j].to_i
+			end
+		end
+		for k in 0..8
+			if @check[i][k].to_i == 0
+				for l in 0..taken.length-1
+					#Find if taken values still in possibilities
+					#Remove if found
+					if @board[i][k].values[0].include? taken[l]
+						@board[i][k].values[0].delete(taken[l])
+					end
+				end
+			end
+		end
+	end
+#damn
+
 
 #Find move in column
 
 #Find move in box
 
 #Repeat above three until no moves found
+end
 
 #Guess num
 
@@ -159,4 +179,4 @@ end
 #If a space has 0 possibilities change last guess
 
 getPuzzle
-puts valid
+simplify
