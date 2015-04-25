@@ -14,12 +14,15 @@ def getPuzzle
 			p "Whoops, you should be giving me nine numbers! Try again."
 			row = gets.rstrip().split('')
 		end
+		for k in 0..8
+			row[k] = row[k].to_i
+		end
 		@board[i] = row
 		@check[i] = row.dup
 	#Assign possibilities:
 		for j in 0..8
-			if @board[i][j] == '0' 
-				@board[i][j] = {@board[i][j] => @list0} 
+			if @board[i][j] == 0 
+				@board[i][j] = {@board[i][j] => @list0.dup}
 			else 
 				@board[i][j] = {@board[i][j] => @board[i][j]} 
 			end
@@ -33,7 +36,7 @@ def valid
 #Find duplicates in row	
  	checks = @check.dup
 	for i in 0..8
-		checks[i].delete('0')
+		checks[i].delete(0)
 		if checks.uniq.length != checks.length 
 			return false
 		end
@@ -45,12 +48,12 @@ def valid
 	for i in 0..8
 		for j in 0..8
 			column << checks[j][i]
-			column.delete('0')
-			if column.uniq.length != column.length 
-				return false
-			end
-			column.clear
 		end
+		column.delete(0)
+		if column.uniq.length != column.length 
+			return false
+		end
+		column.clear
 	end
 #Find duplicates in box (this is quite tedious)
 	box1 = []
@@ -68,15 +71,15 @@ def valid
 			box3 << checks[i][j]
 		end
 	end
-	box1.delete('0')
+	box1.delete(0)
 	if box1.uniq.length != box1.length 
 		return false
 	end
-	box2.delete('0')
+	box2.delete(0)
 	if box2.uniq.length != box2.length 
 		return false
 	end
-	box3.delete('0')
+	box3.delete(0)
 	if box3.uniq.length != box3.length 
 		return false
 	end
@@ -95,15 +98,15 @@ def valid
 			box3 << checks[i][j]
 		end
 	end
-	box1.delete('0')
+	box1.delete(0)
 	if box1.uniq.length != box1.length 
 		return false
 	end
-	box2.delete('0')
+	box2.delete(0)
 	if box2.uniq.length != box2.length 
 		return false
 	end
-	box3.delete('0')
+	box3.delete(0)
 	if box3.uniq.length != box3.length 
 		return false
 	end
@@ -122,15 +125,15 @@ def valid
 			box3 << checks[i][j]
 		end
 	end
-	box1.delete('0')
+	box1.delete(0)
 	if box1.uniq.length != box1.length 
 		return false
 	end
-	box2.delete('0')
+	box2.delete(0)
 	if box2.uniq.length != box2.length 
 		return false
 	end
-	box3.delete('0')
+	box3.delete(0)
 	if box3.uniq.length != box3.length 
 		return false
 	end
@@ -141,32 +144,58 @@ end
 
 #Simplify the board
 def simplify
+  taken = []
 #Find move in row
-taken = []
-	for i in 0..8
+  for i in 0..8
+		taken.clear
 		for j in 0..8
 			#Find what nums have been taken already
-			if @check[i][j].to_i > 0
-				taken << @check[i][j].to_i
+			if @check[i][j] > 0
+				taken << @check[i][j]
 			end
 		end
 		for k in 0..8
-			if @check[i][k].to_i == 0
+			if @check[i][k] == 0
 				for l in 0..taken.length-1
 					#Find if taken values still in possibilities
 					#Remove if found
-					if @board[i][k].values[0].include? taken[l]
+					if @board[i][k].values[0].include?(taken[l])
 						@board[i][k].values[0].delete(taken[l])
 					end
 				end
 			end
 		end
+		p @board[i]
 	end
 #damn
-
-
 #Find move in column
-
+column = []
+	for i in 0..8
+		for j in 0..8
+			column << @check[j][i].to_i
+		end
+		for k in 0..8
+			#Find what nums have been taken already
+			if column[k].to_i > 0
+				taken << column[k].to_i
+			end
+		end
+		for l in 0..8
+			
+			if column[l].to_i == 0
+				for m in 0..taken.length-1
+					#Find if taken values still in possibilities
+					#Remove if found
+					if @board[l][i].values[0].include? taken[m]
+						@board[l][i].values[0].delete(taken[m])
+					end
+				end
+			end
+		end
+		taken.clear
+		column.clear
+  end
+  p @board
 #Find move in box
 
 #Repeat above three until no moves found
