@@ -165,24 +165,23 @@ def simplify
 				end
 			end
 		end
-		p @board[i]
 	end
 #damn
 #Find move in column
 column = []
 	for i in 0..8
 		for j in 0..8
-			column << @check[j][i].to_i
+			column << @check[j][i]
 		end
 		for k in 0..8
 			#Find what nums have been taken already
 			if column[k].to_i > 0
-				taken << column[k].to_i
+				taken << column[k]
 			end
 		end
 		for l in 0..8
 			
-			if column[l].to_i == 0
+			if column[l] == 0
 				for m in 0..taken.length-1
 					#Find if taken values still in possibilities
 					#Remove if found
@@ -196,9 +195,154 @@ column = []
 		column.clear
   end
   p @board
-#Find move in box
-
-#Repeat above three until no moves found
+#Find move in box (oh boy)
+  box1taken = []
+  box2taken = []
+  box3taken = []
+  for i in 0..2
+    for j in 0..2
+      if @check[i][j] > 0
+        box1taken << @check[i][j]
+      end
+    end
+    for j in 3..5
+      if @check[i][j] > 0
+        box2taken << @check[i][j]
+      end
+    end
+    for j in 6..8
+      if @check[i][j] > 0
+        box3taken << @check[i][j]
+      end
+    end
+  end
+  for i in 0..2
+    for j in 0..2
+      if @check[i][j] == 0
+        for k in 0..box1taken.length-1
+          if @board[i][j].values[0].include? box1taken[k]
+            @board[i][j].values[0].delete(box1taken[k])
+          end
+        end
+      end
+    end
+    for j in 3..5
+      if @check[i][j] == 0
+        for k in 0..box2taken.length-1
+          if @board[i][j].values[0].include? box2taken[k]
+            @board[i][j].values[0].delete(box2taken[k])
+          end
+        end
+      end
+    end
+    for j in 6..8
+      if @check[i][j] == 0
+        for k in 0..box3taken.length-1
+          if @board[i][j].values[0].include? box3taken[k]
+            @board[i][j].values[0].delete(box3taken[k])
+          end
+        end
+      end
+    end
+  end
+  box1taken.clear
+  box2taken.clear
+  box3taken.clear
+  for i in 3..5
+    for j in 0..2
+      if @check[i][j] > 0
+        box1taken << @check[i][j]
+      end
+    end
+    for j in 3..5
+      if @check[i][j] > 0
+        box2taken << @check[i][j]
+      end
+    end
+    for j in 6..8
+      if @check[i][j] > 0
+        box3taken << @check[i][j]
+      end
+    end
+  end
+  for i in 3..5
+    for j in 0..2
+      if @check[i][j] == 0
+        for k in 0..box1taken.length-1
+          if @board[i][j].values[0].include? box1taken[k]
+            @board[i][j].values[0].delete(box1taken[k])
+          end
+        end
+      end
+    end
+    for j in 3..5
+      if @check[i][j] == 0
+        for k in 0..box2taken.length-1
+          if @board[i][j].values[0].include? box2taken[k]
+            @board[i][j].values[0].delete(box2taken[k])
+          end
+        end
+      end
+    end
+    for j in 6..8
+      if @check[i][j] == 0
+        for k in 0..box3taken.length-1
+          if @board[i][j].values[0].include? box3taken[k]
+            @board[i][j].values[0].delete(box3taken[k])
+          end
+        end
+      end
+    end
+  end
+  box1taken.clear
+  box2taken.clear
+  box3taken.clear
+  for i in 6..8
+    for j in 0..2
+      if @check[i][j] > 0
+        box1taken << @check[i][j]
+      end
+    end
+    for j in 3..5
+      if @check[i][j] > 0
+        box2taken << @check[i][j]
+      end
+    end
+    for j in 6..8
+      if @check[i][j] > 0
+        box3taken << @check[i][j]
+      end
+    end
+  end
+  for i in 6..8
+    for j in 0..2
+      if @check[i][j] == 0
+        for k in 0..box1taken.length-1
+          if @board[i][j].values[0].include? box1taken[k]
+            @board[i][j].values[0].delete(box1taken[k])
+          end
+        end
+      end
+    end
+    for j in 3..5
+      if @check[i][j] == 0
+        for k in 0..box2taken.length-1
+          if @board[i][j].values[0].include? box2taken[k]
+            @board[i][j].values[0].delete(box2taken[k])
+          end
+        end
+      end
+    end
+    for j in 6..8
+      if @check[i][j] == 0
+        for k in 0..box3taken.length-1
+          if @board[i][j].values[0].include? box3taken[k]
+            @board[i][j].values[0].delete(box3taken[k])
+          end
+        end
+      end
+    end
+  end
 end
 
 #Guess num
